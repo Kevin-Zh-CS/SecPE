@@ -112,6 +112,7 @@ public:
     Ciphertext invert_sqrt(Ciphertext x, int d_newt = 5, int d_gold = 2);
     void eval_odd_deg9_poly(vector<double> &a, Ciphertext &x, Ciphertext &dest);
     Ciphertext sgn_eval(Ciphertext x, int d_g, int d_f);
+    Ciphertext sgn(Ciphertext x, int d_g, int d_f);
     Ciphertext exp(Ciphertext x);
     Ciphertext inverse(Ciphertext x, int iter = 4);
 };

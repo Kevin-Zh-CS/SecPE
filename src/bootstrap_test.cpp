@@ -6,11 +6,7 @@
 #include "Bootstrapper.h"
 #include "ModularReducer.h"
 #include "Polynomial.h"
-#include "gelu.h"
-#include "layer_norm.h"
-#include "matrix_mul.h"
 #include "seal/seal.h"
-#include "softmax.h"
 // #include "ScaleInvEvaluator.h"
 #include <chrono>
 #include <random>
@@ -198,7 +194,7 @@ int main()
     Plaintext plain;
     Ciphertext cipher;
 
-    CKKSEvaluator ckks_evaluator(context, encryptor, decryptor, encoder, evaluator, scale, relin_keys, gal_keys);
+    // CKKSEvaluator ckks_evaluator(context, encryptor, decryptor, encoder, evaluator, scale, relin_keys, gal_keys);
 
     for (size_t _ = 0; _ < iterations; _++) {
         if (_ == 0)
@@ -238,48 +234,49 @@ int main()
 
         duration<double> sec = system_clock::now() - start;
         cout << "bootstrapping time : " << sec.count() << "s" << endl;
-
-        cout << "return cipher level: " << rtn.coeff_modulus_size() << endl;
-
-        rtn = ckks_evaluator.sgn_eval(rtn, 2, 2);
-
-        decryptor.decrypt(rtn, plain);
-        // encoder.decode(plain, after, sparse_slots);
-        encoder.decode(plain, after);
-
-        for (long i = 0; i < sparse_slots; i++) {
-            if (before[i] > 0) {
-                before[i] = 0.5;
-            } else {
-                before[i] = -0.5;
-            }
-        }
-
-        mean_err = 0;
-        for (long i = 0; i < sparse_slots; i++) {
-            // cout << i << "m: " << recover_vefore(before[i].real(), boundary_K) << "\td: " << after[i].real()<< endl;
-
-            if (i < 10)
-                cout << i << " " << before[i] << "<---->" << after[i] << endl;
-
-            mean_err += abs(before[i] - after[i]);
-            // if (file.is_open())
-            // {
-            //     file << before[i].real() - after[i].real() << ","
-            //      << before[i].imag() - after[i].imag() << "," << flush;
-            // }
-        }
-        mean_err /= sparse_slots;
-        cout << "Absolute mean of error: " << mean_err << endl;
-        tot_err += mean_err;
     }
-    tot_err /= iterations;
 
-    // if (file.is_open())
-    // {
-    //     file << endl;
+    //     cout << "return cipher level: " << rtn.coeff_modulus_size() << endl;
+
+    //     rtn = ckks_evaluator.sgn_eval(rtn, 2, 2);
+
+    //     decryptor.decrypt(rtn, plain);
+    //     // encoder.decode(plain, after, sparse_slots);
+    //     encoder.decode(plain, after);
+
+    //     for (long i = 0; i < sparse_slots; i++) {
+    //         if (before[i] > 0) {
+    //             before[i] = 0.5;
+    //         } else {
+    //             before[i] = -0.5;
+    //         }
+    //     }
+
+    //     mean_err = 0;
+    //     for (long i = 0; i < sparse_slots; i++) {
+    //         // cout << i << "m: " << recover_vefore(before[i].real(), boundary_K) << "\td: " << after[i].real()<< endl;
+
+    //         if (i < 10)
+    //             cout << i << " " << before[i] << "<---->" << after[i] << endl;
+
+    //         mean_err += abs(before[i] - after[i]);
+    //         // if (file.is_open())
+    //         // {
+    //         //     file << before[i].real() - after[i].real() << ","
+    //         //      << before[i].imag() - after[i].imag() << "," << flush;
+    //         // }
+    //     }
+    //     mean_err /= sparse_slots;
+    //     cout << "Absolute mean of error: " << mean_err << endl;
+    //     tot_err += mean_err;
     // }
-    cout << " mean error: " << tot_err << endl;
+    // tot_err /= iterations;
+
+    // // if (file.is_open())
+    // // {
+    // //     file << endl;
+    // // }
+    // cout << " mean error: " << tot_err << endl;
     // file.close();
 
     return 0;

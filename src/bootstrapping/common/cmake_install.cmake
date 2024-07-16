@@ -1,4 +1,4 @@
-# Install script for directory: /home/zhangjiawen/Code/NEXUS/src/bootstrapping/common
+# Install script for directory: /home/zhangjiawen/Code/SecPE/src/bootstrapping/common
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

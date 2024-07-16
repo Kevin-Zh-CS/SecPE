@@ -24,7 +24,7 @@ void CKKSEvaluator::re_encrypt(Ciphertext &ct)
     data.resize(ct.save_size(compr_mode_type::zstd));
     comm += ct.save(data.data(), data.size(), compr_mode_type::zstd);
     auto end = high_resolution_clock::now();
-    cout << duration_cast<milliseconds>(end - start).count() / 2 << " milliseconds" << endl;
+    // cout << duration_cast<milliseconds>(end - start).count() / 2 << " milliseconds" << endl;
     // cout << "depth = " <<
     // context->get_context_data(ct.parms_id())->chain_index() << "\n";
 }
@@ -36,7 +36,7 @@ void CKKSEvaluator::print_decrypted_ct(Ciphertext &ct, int nums)
     decryptor->decrypt(ct, temp);
     encoder->decode(temp, v);
     for (int i = 0; i < nums; i++) {
-        cout << v[i] << " ";
+        printf("%d ", int(v[i]));
     }
     cout << "\n";
 }
@@ -195,6 +195,36 @@ Ciphertext CKKSEvaluator::sgn_eval(Ciphertext x, int d_g, int d_f)
             eval_odd_deg9_poly(f4_coeffs, dest, dest);
         }
     }
+    return dest;
+}
+
+Ciphertext CKKSEvaluator::sgn(Ciphertext x, int d_g, int d_f)
+{
+    Ciphertext dest = x;
+    for (int i = 0; i < d_g; i++) {
+        // cout << "depth: " << context->get_context_data(dest.parms_id())->chain_index() << endl;
+        //  if (context->get_context_data(dest.parms_id())->chain_index() < 4) {
+        //      re_encrypt(dest);
+        //  }
+        if (i == d_g - 1) {
+            eval_odd_deg9_poly(g4_coeffs, dest, dest);
+        } else {
+            eval_odd_deg9_poly(g4_coeffs, dest, dest);
+        }
+    }
+    for (int i = 0; i < d_f; i++) {
+        // cout << "depth: " << context->get_context_data(dest.parms_id())->chain_index() << endl;
+
+        // if (context->get_context_data(dest.parms_id())->chain_index() < 4) {
+        //     re_encrypt(dest);
+        // }
+        if (i == d_f - 1) {
+            eval_odd_deg9_poly(f4_coeffs, dest, dest);
+        } else {
+            eval_odd_deg9_poly(f4_coeffs, dest, dest);
+        }
+    }
+    // re_encrypt(x);
     return dest;
 }
 

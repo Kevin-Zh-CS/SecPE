@@ -12,8 +12,6 @@ void ArgmaxEvaluator::argmax(Ciphertext &x, Ciphertext &res, int len) {
     a = x;
     for (int i = 0; i < log_step; ++i) {
         ckks->evaluator->rotate_vector(a, pow(2, i), *ckks->galois_keys, b);
-
-        //a = max(a,b)
         ckks->evaluator->add(a, b, a_plus_b);
         ckks->evaluator->sub(a, b, a_minus_b);
         sign = ckks->sgn_eval(a_minus_b, 2, 2);
@@ -28,8 +26,6 @@ void ArgmaxEvaluator::argmax(Ciphertext &x, Ciphertext &res, int len) {
         a_minus_b.scale() = ckks->scale;
         ckks->evaluator->mod_switch_to_inplace(a_plus_b, a_minus_b.parms_id());
         ckks->evaluator->add(a_plus_b, a_minus_b, a);
-
-        
         ckks->re_encrypt(a);
     }
     a.scale() = ckks->scale;
