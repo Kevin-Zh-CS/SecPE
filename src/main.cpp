@@ -56,7 +56,7 @@ int main()
     ArgmaxEvaluator argmax_evaluator(ckks_evaluator);
 
     std::cout << "Initilization done" << std::endl;
-    cout << "Input: 0.4, 0.3, 0.2, 0.1, 0.7, 0.8, 0.2, 0.4"; 
+    cout << "Input: 0.4, 0.3, 0.2, 0.1, 0.7, 0.8, 0.2, 0.4" << endl; 
 
     auto start = high_resolution_clock::now();
     int size = input.size();
